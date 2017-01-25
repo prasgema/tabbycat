@@ -36,6 +36,38 @@
     <div class="col-sm-12">
       <div class="panel panel-default">
         <div class="panel-heading strong text-center">
+          {% trans "Round Timeline" %}
+        </div>
+        <div class="panel-body">
+          Time the round was advanced to: {{ time_advanced_to }}<br>
+          Time the draw was created: {{ draw_create }} <br>
+          Time the draw was confirmed: draw_confirm: {{ draw_confirm }} <br>
+
+          Venue auto allocation: {{ venue_allocation }} <br>
+          Venue edit: {{ last_venue_edit }} <br>
+
+          Adj auto allocation was made: {{ adj_allocation }} <br>
+          Time the last adj allocation was made: {{ last_allocation_edit }} <br>
+
+
+          Time the draw was released: {{ draw_release }}<br>
+          Time the motions were last edited: {{ motions_edit }}
+          Time the motions were released: {{ motions_release }} <br>
+          Time that debates started: {{ round.starts_at }}<br>
+          Time the first ballot was checked in: {{ first_checkin }} <br>
+          Time the last ballot was checked in: {{ last_checkin }} <br>
+
+          Time the first ballot was confirmed in: {{ first_confirmed }} <br>
+          Time the last ballot was confirmed in: {{ last_confirmed }} <br>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="panel panel-default">
+        <div class="panel-heading strong text-center">
           {% trans "Number of Ballots In"%}
         </div>
         <div class="panel-body">
