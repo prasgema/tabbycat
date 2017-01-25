@@ -7,7 +7,7 @@
 {% block head-title %}<span class="emoji">⏰</span>{{ round_name }} {% trans "Overview" %}{% endblock %}
 
 {% block sub-title %}
-  {% blocktrans with round_name=round.name round_status=round.get_draw_status_display.lower %}{{ round_name }} is {{ round_status }}{% endblocktrans %}
+  {% blocktrans with round_name=round.name round_status=round.get_draw_status_display.lower %}{{ round_name }}'s Draw is {{ round_status }}{% endblocktrans %}
   ({% trans "this page will refresh its data automatically" %})
 {% endblock %}
 
