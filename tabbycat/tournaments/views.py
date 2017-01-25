@@ -50,8 +50,8 @@ class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
     cache_timeout = 10 # Set slower to show new indexes so it will show new pages
 
 
-class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView):
-    template_name = "tournament_index.html"
+class TournamentOverviewView(LoginRequiredMixin, TournamentMixin, TemplateView):
+    template_name = "round_overview.html"
 
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
@@ -80,6 +80,10 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
             else:
                 raise Http404()
         return super().get(self, request, *args, **kwargs)
+
+
+class RoundOverviewView(TournamentOverviewView, RoundMixin):
+    pass
 
 
 class RoundIncrementConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView):

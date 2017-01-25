@@ -393,11 +393,11 @@ class PublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, Ba
 # JSON views for tournament overview page
 # ==============================================================================
 
-class BallotsStatusJsonView(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
+class BallotsStatusJsonView(LoginRequiredMixin, RoundMixin, JsonDataResponseView):
 
     def get_data(self):
 
-        rd = self.get_tournament().current_round
+        rd = self.get_round()
         ballots = BallotSubmission.objects.filter(debate__round=rd, discarded=False)
 
         # For each debate, find (a) the first non-discarded submission time, and
