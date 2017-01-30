@@ -68,7 +68,6 @@ class TournamentOverviewView(LoginRequiredMixin, TournamentMixin, TemplateView):
         else:
             return None
 
-
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
         round = self.get_round()
