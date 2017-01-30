@@ -4,6 +4,8 @@ from django.db.models import Max
 from django.utils.encoding import force_text
 from django.utils.translation import pgettext_lazy, ugettext_lazy
 
+from actionlog.models import ActionLogEntry
+
 from .models import Round
 
 BREAK_ROUND_NAMES = [
@@ -155,3 +157,52 @@ aff_possessive = _get_position_name('aff_possessive')
 neg_possessive = _get_position_name('neg_possessive')
 aff_initial = _get_position_name('aff_initial')
 neg_initial = _get_position_name('neg_initial')
+
+
+def get_round_timings(round, kwargs):
+    def rt(type, first=True):
+        order = 'timestamp'
+        if not first:
+            order = '-timestamp'
+
+        action = ActionLogEntry.objects.filter(type=type).order_by(order).first()
+        if action:
+            # TODO; translate to JS time
+            # import datetime, time
+            # d = datetime.datetime.utcnow()
+            # for_js = int(time.mktime(d.timetuple())) * 1000
+            return action.timestamp
+        else:
+            return None
+
+    # TODO: account for first round (or just leave it as None?)
+    kwargs["advanced_to"] = rt(ActionLogEntry.ACTION_TYPE_ROUND_ADVANCE)
+
+    kwargs["draw_create"] = rt(ActionLogEntry.ACTION_TYPE_DRAW_CREATE)
+    kwargs["draw_confirm"] = rt(ActionLogEntry.ACTION_TYPE_DRAW_CONFIRM)
+
+    kwargs["venue_allocation"] = rt(ActionLogEntry.ACTION_TYPE_VENUES_SAVE)
+    kwargs["last_venue_edit"] = rt(ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE, first=False)
+
+    kwargs["set_importances"] = rt(ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT)
+    kwargs["adj_allocation"] = rt(ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO)
+
+    # TODO: this doesn't actually work anymore; they auto save
+    # kwargs["last_allocation_edit"] = rt(ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE, first=False)
+
+    kwargs["draw_release"] = rt(ActionLogEntry.ACTION_TYPE_DRAW_RELEASE)
+
+    kwargs["motions_added"] = rt(ActionLogEntry.ACTION_TYPE_MOTION_EDIT)
+    kwargs["motions_release"] = rt(ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE)
+
+    # TODO: translate to same date formats at the others
+    kwargs["round_start"] = round.starts_at
+
+    kwargs["first_checkin"] = rt(ActionLogEntry.ACTION_TYPE_BALLOT_CHECKIN)
+    kwargs["last_checkin"] = rt(ActionLogEntry.ACTION_TYPE_BALLOT_CHECKIN, first=False)
+
+    kwargs["first_confirmed"] = rt(ActionLogEntry.ACTION_TYPE_BALLOT_CONFIRM)
+    # TODO: need to fetch results for this
+    # kwargs["last_confirmed"] = rt(ActionLogEntry.ACTION_TYPE_BALLOT_CONFIRM, first=False)
+
+    return kwargs

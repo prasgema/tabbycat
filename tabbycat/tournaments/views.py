@@ -21,6 +21,7 @@ from utils.mixins import CacheMixin, PostOnlyRedirectView, SuperuserRequiredMixi
 from .forms import TournamentForm
 from .mixins import RoundMixin, TournamentMixin
 from .models import Tournament
+from .utils import get_round_timings
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -57,17 +58,6 @@ class TournamentOverviewView(LoginRequiredMixin, TournamentMixin, TemplateView):
         tournament = self.get_tournament()
         return tournament.current_round
 
-    def rt(self, type, first=True):
-        order = 'timestamp'
-        if not first:
-            order = '-timestamp'
-
-        action = ActionLogEntry.objects.filter(type=type).order_by(order).first()
-        if action:
-            return action.timestamp
-        else:
-            return None
-
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
         round = self.get_round()
@@ -75,30 +65,7 @@ class TournamentOverviewView(LoginRequiredMixin, TournamentMixin, TemplateView):
         kwargs["round"] = round
         kwargs["readthedocs_version"] = settings.READTHEDOCS_VERSION
         kwargs["blank"] = not (tournament.team_set.exists() or tournament.adjudicator_set.exists() or tournament.venue_set.exists())
-
-        kwargs["advanced_to"] = self.rt(ActionLogEntry.ACTION_TYPE_ROUND_ADVANCE)
-
-        kwargs["draw_create"] = self.rt(ActionLogEntry.ACTION_TYPE_DRAW_CREATE)
-        kwargs["draw_confirm"] = self.rt(ActionLogEntry.ACTION_TYPE_DRAW_CONFIRM)
-
-        kwargs["venue_allocation"] = self.rt(ActionLogEntry.ACTION_TYPE_VENUES_SAVE)
-        kwargs["last_venue_edit"] = self.rt(ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE, first=False)
-
-        kwargs["set_importances"] = self.rt(ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT)
-        kwargs["adj_allocation"] = self.rt(ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO)
-        kwargs["last_allocation_edit"] = self.rt(ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE, first=False)
-
-        kwargs["draw_release"] = self.rt(ActionLogEntry.ACTION_TYPE_DRAW_RELEASE)
-
-        kwargs["motions_edit"] = self.rt(ActionLogEntry.ACTION_TYPE_MOTION_EDIT)
-        kwargs["motions_release"] = self.rt(ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE)
-
-        kwargs["first_checkin"] = self.rt(ActionLogEntry.ACTION_TYPE_BALLOT_CHECKIN)
-        kwargs["last_checkin"] = self.rt(ActionLogEntry.ACTION_TYPE_BALLOT_CHECKIN, first=False)
-
-        kwargs["first_confirmed"] = self.rt(ActionLogEntry.ACTION_TYPE_BALLOT_CONFIRM)
-        kwargs["last_confirmed"] = self.rt(ActionLogEntry.ACTION_TYPE_BALLOT_CONFIRM, first=False)
-
+        kwargs = get_round_timings(round, kwargs)
         return super().get_context_data(**kwargs)
 
     def get(self, request, *args, **kwargs):
