@@ -4,7 +4,13 @@
 Installing Locally on Linux
 ===========================
 
-Before you start, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
+.. admonition:: Is this the best install method for you?
+  :class: attention
+
+  In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
+
+  If you just want to quickly set up a copy of Tabbycat to run locally on Linux, we recommend :ref:`installing using Docker<install-docker>`, which is much easier than the process below.
+
 
 Requisite technical background
 ==============================
@@ -36,7 +42,7 @@ Short version
 
 Then create local_settings.py as described :ref:`below <local-settings-linux>`, then::
 
-  pyvenv venv                                                 # or virtualenv
+  python3 -m venv venv
   source venv/bin/activate
   pip install --upgrade pip
   pip install -r requirements_common.txt
@@ -54,26 +60,27 @@ First, you need to install all of the software on which Tabbycat depends, if you
 .. admonition:: Advanced users
   :class: tip
 
-  These instructions are for Ubuntu 14.10 and higher. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
+  These instructions are for Ubuntu 14.04 and higher. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
+
+.. _install-linux-python:
 
 1(a). Python
 ------------
-As of version 0.8, Tabbycat requires Python 3.4 or later.  You probably already have Python 3.4, but you'll also need the development package in order to install Psycopg2 later.  The ``pyvenv`` command will come in handy too.  Install::
+Tabbycat requires Python 3.4 or later.  You probably already have Python 3.4, but you'll also need the development package in order to install Psycopg2 later.  The ``venv`` module will come in handy too.  Install::
 
-    $ sudo apt-get install python3-dev
+    $ sudo apt-get install python3-dev python3-venv
 
 Check the version::
 
     $ python3 --version
     Python 3.4.4
 
-.. warning:: As of version 0.8, Python 2 is not supported. You must use Python 3.4 or
-  higher.
+.. warning:: Tabbycat does not support Python 2. You must use Python 3.4 or later.
 
 .. admonition:: Advanced users
   :class: tip
 
-  If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead of Python's built-in ``pyvenv``.
+  If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead of Python's built-in ``venv`` module.
 
 1(b). PostgreSQL
 ----------------
@@ -84,6 +91,8 @@ You'll need the *server-dev* package in order to install Psycopg2 later. As per 
     $ sudo apt-get install postgresql-9.6 postgresql-server-dev-9.6
 
 If using Ubuntu <14.10 substitute "postgresql-9.3" for "postgresql-9.6" in the above commands.
+
+.. _install-linux-nodejs:
 
 1(c). Node.js/NPM
 -----------------
@@ -97,6 +106,8 @@ Tabbycat requires Node and its package manager to compile front-end dependencies
   $ curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
   $ sudo apt-get install -y nodejs
   $ sudo ln -s /usr/bin/nodejs /usr/bin/node
+
+.. _install-linux-source-code:
 
 2. Get the source code
 ======================
@@ -135,6 +146,8 @@ If you've used Git before, you might prefer to clone `our GitHub repository`_ in
 
     $ sudo -u postgres createdb mydatabasename --owner myusername
 
+
+.. _install-linux-tabbycat:
 
 4. Install Tabbycat
 ===================
@@ -177,7 +190,7 @@ Almost there!
          }
      }
 
-6. Navigate to the **tabbycat** sub folder in the terminal, initialize the database, compile the assets, and create a user account for yourself::
+6. Navigate to the **tabbycat** sub-directory, initialize the database, compile the assets, and create a user account for yourself::
 
     $ cd tabbycat
     $ dj migrate

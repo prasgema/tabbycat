@@ -6,10 +6,6 @@ from django.db import models
 class VenueGroup(models.Model):
     name = models.CharField(unique=True, max_length=200)
     short_name = models.CharField(max_length=25)
-    team_capacity = models.IntegerField(
-        blank=True,
-        null=True,
-        help_text="The greatest possible number of teams that can debate in this venue group")
 
     @property
     def divisions_count(self):
@@ -64,14 +60,25 @@ class VenueConstraintManager(models.Manager):
         ).distinct()
 
 
+class VenueConstraintCategory(models.Model):
+    name = models.CharField(max_length=50)
+    venues = models.ManyToManyField(Venue)
+
+    class Meta:
+        verbose_name_plural = "venue constraint categories"
+
+    def __str__(self):
+        return self.name
+
+
 class VenueConstraint(models.Model):
 
     SUBJECT_CONTENT_TYPE_CHOICES = models.Q(app_label='participants', model='team') | \
-        models.Q(app_label='participants', model='adjudicator') | \
-        models.Q(app_label='participants', model='institution') | \
-        models.Q(app_label='divisions', model='division')
+                                   models.Q(app_label='participants', model='adjudicator') | \
+                                   models.Q(app_label='participants', model='institution') | \
+                                   models.Q(app_label='divisions', model='division')
 
-    venue_group = models.ForeignKey(VenueGroup, models.CASCADE)
+    category = models.ForeignKey(VenueConstraintCategory, models.CASCADE)
     priority = models.IntegerField()
 
     subject_content_type = models.ForeignKey(ContentType, models.CASCADE,
@@ -82,4 +89,4 @@ class VenueConstraint(models.Model):
     objects = VenueConstraintManager()
 
     def __str__(self):
-        return "%s for %s [%s]" % (self.subject, self.venue_group, self.priority)
+        return "%s for %s [%s]" % (self.subject, self.category, self.priority)

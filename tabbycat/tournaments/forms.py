@@ -50,4 +50,5 @@ class TournamentForm(ModelForm):
 
         tournament.current_round = tournament.round_set.first()
         tournament.save()
+
         return tournament

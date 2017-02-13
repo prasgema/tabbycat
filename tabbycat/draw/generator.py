@@ -1145,7 +1145,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
     def _exclude_teams_without_divisions(self):
         teams_with_divisions = [t for t in self.teams if t.division]
         if len(self.teams) - len(teams_with_divisions) > 1:
-            logger.info("There are %d teams lacking a division (and thus excluded from the draw) " % teams_without_divisions)
+            logger.info("There are %d teams lacking a division (and thus excluded from the draw)"
+                        % len(teams_with_divisions))
         return teams_with_divisions
 
     def _make_raw_brackets_from_divisions(self):
@@ -1154,8 +1155,8 @@ class RoundRobinDrawGenerator(BaseDrawGenerator):
         brackets = OrderedDict()
         teams = list(self.teams)
         for team in teams:
-            # Converting from bracket's name to a float (so it can pretend to be a Bracket)
-            division = float(team.division.name)
+            # Using the division ID as the division identifier
+            division = float(team.division.id)
             if division in brackets:
                 brackets[division].append(team)
             else:

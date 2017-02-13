@@ -272,6 +272,9 @@ if os.environ.get('MEMCACHIER_SERVERS', ''):
             }
         }
 
+if os.environ.get('KITTEN', '') == 'true':
+    TABBYCAT_VERSION += "k"
+
 # ==============================================================================
 # Travis CI
 # ==============================================================================
@@ -290,13 +293,27 @@ if os.environ.get('TRAVIS', '') == 'true':
     }
 
 # ==============================================================================
-# Local Overrides
+# Local Overrides and Docker
 # ==============================================================================
 
-try:
-    LOCAL_SETTINGS
-except NameError:
+if os.environ.get('IN_DOCKER', '') and bool(int(os.environ['IN_DOCKER'])):
+    DEBUG = True # Just to be sure
+    ALLOWED_HOSTS = ["*"]
+    DATABASES = {
+        'default': {
+             'ENGINE': 'django.db.backends.postgresql',
+             'NAME': 'tabbycat',
+             'USER': 'tabbycat',
+             'PASSWORD': 'tabbycat',
+             'HOST': 'db',
+             'PORT': 5432, # Non-standard to prvent collisions
+        }
+    }
+else:
     try:
-        from local_settings import *   # flake8: noqa
-    except ImportError:
-        pass
+        LOCAL_SETTINGS
+    except NameError:
+        try:
+            from local_settings import *   # flake8: noqa
+        except ImportError:
+            pass

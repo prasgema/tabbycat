@@ -3,26 +3,39 @@ Change Log
 ==========
 
 
-1.2.0
------
-- Redesigned the core round workflow; splitting of the "Display Draw" and "Motions" actions into seperate pages to make for a more streamlined user experience
-- Added basic infrastructure for creating tabbycat translations
+1.2.0 (Foldex)
+--------------
+
+- Redesigned the core round workflow, splitting "Display Draw" and "Motions" into separate pages
+- Started work on basic infrastructure for translations
+- Separated venue groups from venue constraint categories
+- Added information about autosave status to the allocations page
+- Added button to load a demo tournament when creating a new tournament
+- Added side names option, *e.g.* “Proposition”/“Opposition” instead of “Affirmative”/“Negative”
+- Added support for Docker-based installations, a much simpler local install method
+- Added a more explicit donations link and dedicated page about donations
+- Modified licence to clarify that donations are required for some tournaments
+- Added a "Tabbykitten" version of Tabbycat that can be deployed without a credit/debit card
 
 
 1.1.7
 -----
+
 - Yet more minor bug fixes
 - The auto-allocation UI will now detail your minimum rating setting better
+- Added guidance on database backups to documentation
 
 
 1.1.6
 -----
+
 - A number of minor bug fixes
 - Added basic infrastructure for creating tabbycat translations
 
 
 1.1.5
 -----
+
 - A number of minor bug fixes and improvements to documentation
 
 
