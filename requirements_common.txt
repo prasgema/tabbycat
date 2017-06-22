@@ -21,7 +21,7 @@ sqlparse==0.2.3                         # Parsing SQL statements
 
 # Pipeline
 
-django-gulp==2.5.1                      # Run gulp tasks with dj r/collectstatic
+django-webpack-loader==0.5.0            # Webpack
 whitenoise==3.3.0                       # Static file serving
 waitress==1.0.2                         # For web serving
 

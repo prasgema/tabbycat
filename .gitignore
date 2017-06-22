@@ -8,6 +8,7 @@ tabbycat/staticfiles/
 tabbycat/static/css/
 tabbycat/static/js/
 tabbycat/static/fonts/
+tabbycat/webpack-stats.json
 
 # Dependencies
 node_modules

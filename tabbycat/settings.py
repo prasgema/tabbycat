@@ -71,7 +71,7 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django_gulp',  # Asset compilation; must be before staticfiles
+    'webpack_loader',
     'whitenoise.runserver_nostatic',  # Use whitenoise with runserver
     'django.contrib.staticfiles',
     'django.contrib.humanize',
@@ -152,10 +152,17 @@ STATICFILES_FINDERS = (
 # Whitenoise Gzipping and unique names
 STATICFILES_STORAGE = 'utils.misc.SquashedWhitenoiseStorage'
 
-# When running server side always use build not watch
-GULP_PRODUCTION_COMMAND = "npm run gulp build -- --production"
-GULP_DEVELOP_COMMAND = "npm run gulp build -- --development"
-
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+    }
+}
+if not DEBUG:
+    WEBPACK_LOADER['DEFAULT'].update({
+        'BUNDLE_DIR_NAME': 'dist/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats-prod.json')
+    })
 
 # ==============================================================================
 # Logging
